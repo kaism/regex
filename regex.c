@@ -24,7 +24,9 @@ struct env {
     int val;
     int top;
     char stack[MAX];
-} env;
+    char infix[MAX];
+    char postfix[MAX];
+};
 
 typedef enum {
     false,
@@ -44,8 +46,6 @@ int main(int argc, char *argv[]) {
 
     struct env env;
     env.infile = fopen(argv[1], "r");
-
-    env.val = scan(&env.infile);
 
     infix(&env, argv[1]);
 }
@@ -107,23 +107,23 @@ int is_rbrace(struct env *env) {
 }
 
 
-void push(struct env *env, int item) {
-    if(env->top > MAX - 1) {
+void push(struct env **env, char item) {
+    if((*env)->top > MAX - 1) {
         printf("stack overflow\n");
         stack_error(overflow);
     } else{
-        env->top++;
-        env->stack[env->top] = item;
+        (*env)->top++;
+        (*env)->stack[env->top] = item;
     }
 }
 
-char pop(struct env *env) {
-    if(env->top < 0) {
+char pop(struct env **env) {
+    if((*env)->top < 0) {
         printf("stack underflow\n");
         stack_error(underflow);
     } else {
-        char item = env->top;
-        env->top--;
+        char item = (*env)->top;
+        (*env)->top--;
         return item;
     }
     return '\0';
@@ -136,6 +136,9 @@ void stack_error(enum_stack_err err) {
         ;// that
 }
 
+//infix = X
+//postfix = Y
 void postfix(struct env **env, char infix[]) {
-    push
+    push(env, '(');
+    
 }
