@@ -107,13 +107,18 @@ int is_rbrace(struct env *env) {
 }
 
 
-void push(struct env **env, char item) {
+void push(struct env **env, char item, char *fix) {
     if((*env)->top > MAX - 1) {
         printf("stack overflow\n");
         stack_error(overflow);
     } else{
         (*env)->top++;
-        (*env)->stack[env->top] = item;
+        if(strcmp(fix, "stack"))
+            (*env)->stack[(*env)->top] = item;
+        else if(strcmp(fix, "infix"))
+            (*env)->stack[(*env)->top] = item;
+        else if(strcmp(fix, "postfix"))
+            (*env)->stack
     }
 }
 
@@ -138,7 +143,8 @@ void stack_error(enum_stack_err err) {
 
 //infix = X
 //postfix = Y
-void postfix(struct env **env, char infix[]) {
-    push(env, '(');
-    
+void postfix(struct env **env) {
+    push(env, '(', "stack");
+    push(env, ')', "infix");
+
 }
