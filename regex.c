@@ -24,9 +24,19 @@ struct env {
     int val;
     int top;
     char stack[MAX];
-    char infix[MAX];
-    char postfix[MAX];
+    infix_t infix;
+    postfix_t postfix;
 };
+
+typedef struct infix_t {
+    int top;
+    char stack[MAX];
+} infix_t;
+
+typedef postfix_t {
+    int top;
+    char stack[MAX];
+} postfix_t;
 
 typedef enum {
     false,
@@ -108,6 +118,23 @@ int is_rbrace(struct env *env) {
 
 
 void push(struct env **env, char item, char *fix) {
+    int top;
+    char stack[]
+    if(strcmp(fix, "stack")) {
+        top = (*env)->top;
+        strcpy(stack, (*env)->stack);
+    }
+
+    if(strcmp(fix, "infix")) {
+        top = (*env)->infix->top;
+        strcpy(stack, (*env)->infix->stack);
+    }
+
+    if(strcmp(fix, "postfix")) {
+        top = (*env)->postfix->top;
+        strcpy(stack, (*env)->postfix->stack);
+    }
+
     if((*env)->top > MAX - 1) {
         printf("stack overflow\n");
         stack_error(overflow);
@@ -143,6 +170,7 @@ void stack_error(enum_stack_err err) {
 
 //infix = X
 //postfix = Y
+// http://www.includehelp.com/c/infix-to-postfix-conversion-using-stack-with-c-program.aspx
 void postfix(struct env **env) {
     push(env, '(', "stack");
     push(env, ')', "infix");
