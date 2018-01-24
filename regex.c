@@ -19,24 +19,10 @@
 #define BSLASH '\\'
 #define MAX 20000
 
-struct env {
-    FILE* infile;
-    int val;
+typedef stack_t {
     int top;
-    char stack[MAX];
-    infix_t infix;
-    postfix_t postfix;
-};
-
-typedef struct infix_t {
-    int top;
-    char stack[MAX];
-} infix_t;
-
-typedef postfix_t {
-    int top;
-    char stack[MAX];
-} postfix_t;
+    char stack_arr[MAX];
+} stack_t;
 
 typedef enum {
     false,
@@ -48,13 +34,18 @@ typedef enum {
     underflow
 } enum_stack_err;
 
+struct env {
+    FILE* infile;
+    int val;
+    int top;
+    stack_t *stack;
+};
+/* Should struct be global or not? */
 struct env env;
 
 int main(int argc, char *argv[]) {
 
-    /* extract from input file, etc. */
-
-    struct env env;
+    // struct env env;
     env.infile = fopen(argv[1], "r");
 
     infix(&env, argv[1]);
@@ -117,45 +108,32 @@ int is_rbrace(struct env *env) {
 }
 
 
-void push(struct env **env, char item, char *fix) {
-    int top;
-    char stack[]
-    if(strcmp(fix, "stack")) {
-        top = (*env)->top;
-        strcpy(stack, (*env)->stack);
-    }
+void push(stack_t **stack, char item) {
+    int top = (*stack)->top;
+    char stack_arr[];
+    // stack_t *new_stack = malloc(sizeof(stack_t));
+    if(strcmp((*stack)->stack_arr, '\0'))
+       strcpy(stack_arr, (*stack)->stack_arr); 
+    
 
-    if(strcmp(fix, "infix")) {
-        top = (*env)->infix->top;
-        strcpy(stack, (*env)->infix->stack);
-    }
-
-    if(strcmp(fix, "postfix")) {
-        top = (*env)->postfix->top;
-        strcpy(stack, (*env)->postfix->stack);
-    }
-
-    if((*env)->top > MAX - 1) {
+    if(top > MAX - 1) {
         printf("stack overflow\n");
         stack_error(overflow);
     } else{
-        (*env)->top++;
-        if(strcmp(fix, "stack"))
-            (*env)->stack[(*env)->top] = item;
-        else if(strcmp(fix, "infix"))
-            (*env)->stack[(*env)->top] = item;
-        else if(strcmp(fix, "postfix"))
-            (*env)->stack
+        top++;
+        stack_arr[top] = item;
     }
+    (*stack)->top = top;
+    strcpy((*stack)->stack_arr, stack_arr);
 }
 
-char pop(struct env **env) {
-    if((*env)->top < 0) {
+char pop(stack_t **stack) {
+    if((*stack)->top < 0) {
         printf("stack underflow\n");
         stack_error(underflow);
     } else {
-        char item = (*env)->top;
-        (*env)->top--;
+        char item = (*stack)->top;
+        (*stack)->top--;
         return item;
     }
     return '\0';
@@ -171,8 +149,18 @@ void stack_error(enum_stack_err err) {
 //infix = X
 //postfix = Y
 // http://www.includehelp.com/c/infix-to-postfix-conversion-using-stack-with-c-program.aspx
-void postfix(struct env **env) {
-    push(env, '(', "stack");
-    push(env, ')', "infix");
+void postfix(char infix[], char postfix[]) {
+    int i;
+    char *p;
+    stack_t *stack = malloc(sizeof(stack_t));
+
+    push(&stack, '(');
+    strcat(infix, ")");
+
+    for(p = infix; p != '\0'; *p++) {
+        if(isop(infix[i])) {
+
+        } else if(isalpha() || isdigit()
+    }
 
 }
