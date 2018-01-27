@@ -2,14 +2,21 @@
 
 /* Should struct be global or not? */
 struct env env;
+
 enum_stack_err error;
 
 int main(int argc, char *argv[]) {
-    char postfix[MAX];
+    char postfix_exp[MAX];
+    char infix_exp[MAX];
     // struct env env;
     env.infile = fopen(argv[1], "r");
 
-    postfix(argv[1], );
+    printf("Enter infix notation: ");
+    scanf("%s", infix_exp);
+
+    postfix(argv[1], postfix_exp);
+
+    printf("postfix: %s", postfix_exp);
 }
 
 int isop(char c) {
@@ -62,10 +69,10 @@ int is_rbrace(char c) {
 
 void push(stack_t **stack, char item) {
     int top = (*stack)->top;
-    char stack_arr[];
+    char stack_arr[MAX];
     // stack_t *new_stack = malloc(sizeof(stack_t));
-    if(strcmp((*stack)->stack_arr, '\0'))
-       strcpy(stack_arr, (*stack)->stack_arr); 
+    if(strcmp((*stack)->stack_arr, ""))
+       stack_arr[0] = '\0'; 
     
 
     if(top > MAX - 1) {
@@ -134,13 +141,15 @@ void stack_error(enum_stack_err err) {
 //infix = X
 //postfix = Y
 // http://www.includehelp.com/c/infix-to-postfix-conversion-using-stack-with-c-program.aspx
-void postfix(char infix[], char postfix[]) {
+void postfix(char infix[], char postfix_exp[]) {
     int i = 0;
     char *p;
     stack_t *stack = malloc(sizeof(stack_t));
+    env.stack = malloc(sizeof(stack_t));
     stack = env.stack;
 
     push(&stack, '(');
+    printf("%s\n%s", infix, postfix_exp);
     strcat(infix, ")");
 
     for(p = infix; *p != '\0'; p++) {
@@ -148,14 +157,14 @@ void postfix(char infix[], char postfix[]) {
             char x;
             x = pop(&stack);
             while(isop(x) && precedence(x) >= precedence(*p)) {
-                postfix[i] = x;
+                postfix_exp[i] = x;
                 i++;
                 x = pop(&stack);
             }
             x = *p;
             push(&stack, x);
         } else if(isalpha(*p) || isdigit(*p)) {
-            postfix[i] = *p;
+            postfix_exp[i] = *p;
             i++;
         } else if(is_lbrace(*p)) {
             push(&stack, '(');
@@ -163,12 +172,13 @@ void postfix(char infix[], char postfix[]) {
             char x;
             x = pop(&stack);
             while(!is_lbrace(x))
-                postfix[i] = x;
+                postfix_exp[i] = x;
                 i++;
                 x = pop(&stack);
         }  else {
             stack_error(syntax);
         }
     }
-
+    free(stack);
+    free(env.stack);
 }
