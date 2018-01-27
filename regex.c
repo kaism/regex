@@ -1,112 +1,62 @@
-#include <stdio.h>
-/* precedence */
-#define OR 0
-#define DASH 1
-#define PLUS 1
-#define DSIGN 2
-#define QMARK 2
-#define DOT 3
-#define STAR 4
-#define CARROT 5
-#define QUOTE 6
-#define BSLASH 7
-/* ------------------ */
-#define LPAREN '('
-#define RPAREN ')'
-#define LBRACE '{'
-#define RBRACE '}'
-#define LSQUARE '['
-#define RSQUARE ']'
-#define FSLASH '/'
+#include "regex.h"
 
-#define MAX 20000
-
-typedef stack_t {
-    int top;
-    char stack_arr[MAX];
-} stack_t;
-
-typedef enum {
-    false,
-    true
-} truth;
-
-typedef enum {
-    overflow,
-    underflow,
-    syntax;
-} enum_stack_err;
-
-struct env {
-    FILE* infile;
-    stack_t *stack;
-};
 /* Should struct be global or not? */
 struct env env;
 enum_stack_err error;
 
 int main(int argc, char *argv[]) {
-    char postfix[];
+    char postfix[MAX];
     // struct env env;
     env.infile = fopen(argv[1], "r");
 
     postfix(argv[1], );
 }
 
-int isop(struct env *env) {
-    char c;
-    while((c = getc(env->infile)) != EOF) {
-        if(c == '*')
-            return true;
-        else if(c == '+')
-            return true;
-        else if(c == '?')
-            return true;
-         else if(c == '$')
-            return true;
-        else if(c == '^')
-            return true;
-        else if(c == '.')
-            return true;
-        else if(c == '-')
-            return true;
-        else if(c == '\'')
-            return true;
-        else if(c == '/')
-            return true;
-        else if(c == '\\')
-            return true;
-        else
-            return false;
-    }
+int isop(char c) {
+    if(c == '*')
+        return true;
+    else if(c == '+')
+        return true;
+    else if(c == '?')
+        return true;
+     else if(c == '$')
+        return true;
+    else if(c == '^')
+        return true;
+    else if(c == '.')
+        return true;
+    else if(c == '-')
+        return true;
+    else if(c == '\'')
+        return true;
+    else if(c == '/')
+        return true;
+    else if(c == '\\')
+        return true;
+    else
+        return false;
 }
 
-int is_lbrace(struct env *env) {
-
-    while((c == getc(env->infile)) != EOF) {
-        if(c == '(')
-            return true;
-        if(c == '{')
-            return true;
-        else if(c == '[')
-            return true;
-        else
-            return false;
-    }
+int is_lbrace(char c) {
+    if(c == '(')
+        return true;
+    if(c == '{')
+        return true;
+    else if(c == '[')
+        return true;
+    else
+        return false;
 }
 
-int is_rbrace(struct env *env) {
-
-    while((c == getc(env->infile)) != EOF) {
-        if(c == ')')
-            return true;
-        else if(c == '}')
-            return true;
-        else if(c == ']')
-            return true;
-        else
-            return false;
-    }
+int is_rbrace(char c) {
+    if(c == ')')
+        return true;
+    else if(c == '}')
+        return true;
+    else if(c == ']')
+        return true;
+    else
+        return false;
 }
 
 
@@ -174,7 +124,7 @@ void stack_error(enum_stack_err err) {
         exit(0);
     } else if(err == underflow) {
         printf("underflow\n");
-        exit(0)
+        exit(0);
     } else if(err == syntax) {
         printf("Invalid syntax\n");
         exit(0);
@@ -202,8 +152,8 @@ void postfix(char infix[], char postfix[]) {
                 i++;
                 x = pop(&stack);
             }
-            x = *p
-            push(x);
+            x = *p;
+            push(&stack, x);
         } else if(isalpha(*p) || isdigit(*p)) {
             postfix[i] = *p;
             i++;

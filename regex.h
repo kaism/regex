@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 /* precedence */
 #define OR 0
@@ -23,7 +24,7 @@
 
 #define MAX 20000
 
-typedef stack_t {
+typedef struct stack_t {
     int top;
     char stack_arr[MAX];
 } stack_t;
@@ -36,13 +37,15 @@ typedef enum {
 typedef enum {
     overflow,
     underflow,
-    syntax;
+    syntax
 } enum_stack_err;
 
 struct env {
     FILE* infile;
     stack_t *stack;
 };
+
+// typedef stack_t stack_t;
 
 int isop(char c);
 int is_lbrace(char c);
