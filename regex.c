@@ -14,7 +14,7 @@ int main(int argc, char *argv[]) {
     printf("Enter infix notation: ");
     scanf("%s", infix_exp);
 
-    postfix(argv[1], postfix_exp);
+    postfix(infix_exp, postfix_exp);
 
     printf("postfix: %s", postfix_exp);
 }
@@ -47,7 +47,7 @@ int isop(char c) {
 int is_lbrace(char c) {
     if(c == '(')
         return true;
-    if(c == '{')
+    else if(c == '{')
         return true;
     else if(c == '[')
         return true;
@@ -68,14 +68,13 @@ int is_rbrace(char c) {
 
 
 void push(stack_t **stack, char item) {
-    int top = (*stack)->top;
-    char stack_arr[MAX];
-    // stack_t *new_stack = malloc(sizeof(stack_t));
-    if(strcmp((*stack)->stack_arr, ""))
-       stack_arr[0] = '\0'; 
-    
+    int top;
+    char *stack_arr;
 
-    if(top > MAX - 1) {
+    top = (*stack)->top;
+    stack_arr = (*stack)->stack_arr;
+
+   if(top > MAX - 1) {
         printf("stack overflow\n");
         stack_error(overflow);
     } else{
@@ -83,15 +82,16 @@ void push(stack_t **stack, char item) {
         stack_arr[top] = item;
     }
     (*stack)->top = top;
-    strcpy((*stack)->stack_arr, stack_arr);
+    // strcpy((*stack)->stack_arr, stack_arr);
 }
 
 char pop(stack_t **stack) {
-    if((*stack)->top < 0) {
+    int top = (*stack)->top;
+    if(top < 0) {
         printf("stack underflow\n");
         stack_error(underflow);
     } else {
-        char item = (*stack)->top;
+        char item = (*stack)->stack_arr[top];
         (*stack)->top--;
         return item;
     }
@@ -146,13 +146,17 @@ void postfix(char infix[], char postfix_exp[]) {
     char *p;
     stack_t *stack = malloc(sizeof(stack_t));
     env.stack = malloc(sizeof(stack_t));
+    env.stack->top = 0;
+    // env.stack->stack_arr = "";
     stack = env.stack;
 
     push(&stack, '(');
-    printf("%s\n%s", infix, postfix_exp);
     strcat(infix, ")");
+    // printf("%s\n%s", infix, stack->stack_arr);
 
-    for(p = infix; *p != '\0'; p++) {
+    for(p = infix; *p; p++) {
+        // printf("bitch\n");
+        printf("%c\n", *p);
         if(isop(*p)) {
             char x;
             x = pop(&stack);
@@ -178,6 +182,8 @@ void postfix(char infix[], char postfix_exp[]) {
         }  else {
             stack_error(syntax);
         }
+        printf("postfix: %s\n", postfix_exp);
+        printf("infix: %s\n", infix);
     }
     free(stack);
     free(env.stack);
