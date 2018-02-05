@@ -175,7 +175,7 @@ void postfix(char infix[], char postfix_exp[]) {
         } else if(is_rbrace(*p)) {
             char x;
             x = pop(&stack);
-            while(!is_lbrace(x))
+            while(x != '(')
                 postfix_exp[i] = x;
                 i++;
                 x = pop(&stack);
