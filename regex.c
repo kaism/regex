@@ -179,7 +179,7 @@ void postfix(char infix[], char postfix_exp[]) {
                 postfix_exp[i] = x;
                 i++;
                 x = pop(&stack);
-        }  else {
+        } else {
             stack_error(syntax);
         }
         printf("postfix: %s\n", postfix_exp);
